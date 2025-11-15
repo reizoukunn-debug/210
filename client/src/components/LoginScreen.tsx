@@ -28,6 +28,14 @@ function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
         body: JSON.stringify({ email, password }),
       });
 
+      // レスポンスが正常でない場合
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: "サーバーエラーが発生しました" }));
+        setError(errorData.message || `サーバーエラー (${response.status})`);
+        setLoading(false);
+        return;
+      }
+
       const data = await response.json();
 
       if (!data.success || !data.user) {
@@ -64,7 +72,11 @@ function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
         socket.disconnect();
       });
     } catch (err) {
-      setError("ログインに失敗しました。ネットワーク接続を確認してください。");
+      console.error("ログインエラー:", err);
+      const errorMessage = err instanceof Error 
+        ? `接続エラー: ${err.message}` 
+        : "ログインに失敗しました。ネットワーク接続を確認してください。";
+      setError(`${errorMessage} (API: ${API_URL})`);
       setLoading(false);
     }
   };
