@@ -25,7 +25,7 @@ function GameRoom({
     if (!socket) return;
 
     // ゲーム開始
-    socket.on("game_started", (data: { room: Room }) => {
+    socket.on("game_started", (_data: { room: Room }) => {
       setGameResult(null);
       setMyChoice(null);
       setWaitingForOpponent(false);
@@ -44,7 +44,7 @@ function GameRoom({
     });
 
     // ゲーム継続（引き分け）
-    socket.on("game_continue", (data: { room: Room }) => {
+    socket.on("game_continue", (_data: { room: Room }) => {
       setGameResult(null);
       setMyChoice(null);
       setWaitingForOpponent(false);
@@ -52,7 +52,7 @@ function GameRoom({
     });
 
     // 手を選択した通知
-    socket.on("choice_received", (data: { message: string }) => {
+    socket.on("choice_received", (_data: { message: string }) => {
       setWaitingForOpponent(true);
     });
 
