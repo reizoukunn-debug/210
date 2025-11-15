@@ -39,11 +39,18 @@ app.use(
 app.use(express.json());
 
 // データベースの初期化
-const dataDir = path.join(__dirname, "../data");
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+try {
+  const dataDir = path.join(__dirname, "../data");
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+    console.log(`データベースディレクトリを作成しました: ${dataDir}`);
+  }
+  initDatabase();
+  console.log("データベースの初期化が完了しました");
+} catch (error) {
+  console.error("データベース初期化エラー:", error);
+  process.exit(1);
 }
-initDatabase();
 
 const MAX_ONLINE_USERS = 8;
 
@@ -98,17 +105,25 @@ app.post("/api/register", async (req, res) => {
 
 // HTTP API: ログイン（認証のみ、Socket.IO接続は別）
 app.post("/api/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ success: false, message: "メールアドレスとパスワードを入力してください" });
-  }
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "メールアドレスとパスワードを入力してください" });
+    }
 
-  const result = authenticateUser(email, password);
-  if (result.success && result.user) {
-    res.json(result);
-  } else {
-    res.status(401).json(result);
+    const result = authenticateUser(email, password);
+    if (result.success && result.user) {
+      res.json(result);
+    } else {
+      res.status(401).json(result);
+    }
+  } catch (error) {
+    console.error("ログインAPIエラー:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: `サーバーエラー: ${error instanceof Error ? error.message : "不明なエラー"}` 
+    });
   }
 });
 

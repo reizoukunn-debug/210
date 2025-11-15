@@ -13,7 +13,15 @@ if (!fs.existsSync(DB_DIR)) {
 }
 
 // データベース接続
-export const db = new Database(DB_PATH);
+let db: Database.Database;
+try {
+  db = new Database(DB_PATH);
+  console.log(`データベースに接続しました: ${DB_PATH}`);
+} catch (error) {
+  console.error("データベース接続エラー:", error);
+  throw error;
+}
+export { db };
 
 // データベースの初期化
 export function initDatabase() {
