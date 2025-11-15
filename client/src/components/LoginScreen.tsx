@@ -124,14 +124,9 @@ function LoginScreen({ onLoginSuccess, onSwitchToRegister }: LoginScreenProps) {
             {loading ? "ログイン中..." : "ログイン"}
           </button>
         </form>
-        <div className="mt-4 text-center">
-          <button
-            type="button"
-            onClick={onSwitchToRegister}
-            className="text-blue-600 hover:text-blue-800 text-sm"
-          >
-            アカウントをお持ちでない方はこちら
-          </button>
+        <div className="mt-4 text-center text-sm text-gray-600">
+          <p>アカウント登録は運営が行います</p>
+          <p className="text-xs mt-1">メールアドレスとパスワードをお持ちの方はログインしてください</p>
         </div>
       </div>
     </div>

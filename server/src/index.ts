@@ -69,9 +69,20 @@ function getAvailableRooms(): Room[] {
   );
 }
 
-// HTTP API: ユーザー登録
+// HTTP API: ユーザー登録（運営専用 - 管理パスワード必要）
+// 通常のユーザー登録は無効化（運営が事前に登録するため）
 app.post("/api/register", async (req, res) => {
-  const { email, password, username } = req.body;
+  const { email, password, username, adminPassword } = req.body;
+
+  // 管理パスワードのチェック
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin-secret-2025";
+  
+  if (!adminPassword || adminPassword !== ADMIN_PASSWORD) {
+    return res.status(403).json({ 
+      success: false, 
+      message: "ユーザー登録は運営のみが行えます" 
+    });
+  }
 
   if (!email || !password || !username) {
     return res.status(400).json({ success: false, message: "すべての項目を入力してください" });

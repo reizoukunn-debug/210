@@ -78,20 +78,12 @@ function App() {
   // Socket インスタンスを取得する関数（子コンポーネントで使用）
   const getSocket = () => socket;
 
-  // ログイン画面または登録画面
+  // ログイン画面（ユーザー登録は運営のみが行うため、登録画面は非表示）
   if (!isLoggedIn) {
-    if (showRegister) {
-      return (
-        <RegisterScreen
-          onRegisterSuccess={() => setShowRegister(false)}
-          onSwitchToLogin={() => setShowRegister(false)}
-        />
-      );
-    }
     return (
       <LoginScreen
         onLoginSuccess={handleLoginSuccess}
-        onSwitchToRegister={() => setShowRegister(true)}
+        onSwitchToRegister={() => {}}
       />
     );
   }
